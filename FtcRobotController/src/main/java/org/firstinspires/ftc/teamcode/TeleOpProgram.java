@@ -15,7 +15,8 @@ public class TeleOpProgram extends LinearOpMode {
     Motor right2;
     Motor linear1;
     Motor linear2;
-    Motor turnclaw;
+    Motor intake1;
+    Motor intake2;
     MotorBlock block;
     Servo claw1;
     Servo claw2;
@@ -35,14 +36,13 @@ public class TeleOpProgram extends LinearOpMode {
         right2 = new Motor(hardwareMap.get(DcMotor.class, "right2"));
         linear1 = new Motor(hardwareMap.get(DcMotor.class, "linear1"));
         linear2 = new Motor(hardwareMap.get(DcMotor.class,"linear2"));
-
+        intake1 = new Motor(hardwareMap.get(DcMotor.class,"intake1"));
+        intake2 = new Motor(hardwareMap.get(DcMotor.class,"intake2"));
         block = new MotorBlock(left1,right1,left2,right2);
         claw1 = hardwareMap.get(Servo.class,"claw1");
         claw2 = hardwareMap.get(Servo.class,"claw2");
         mover1 = hardwareMap.get(Servo.class,"mover1");
-        mover2 = hardwareMap.get(Servo.class,"mover2");
-        turnclaw = new Motor(hardwareMap.get(DcMotor.class, "turnclaw"));
-        //While OpMode is running
+        mover2 = hardwareMap.get(Servo.class,"mover2");//While OpMode is running
         waitForStart();
         while (opModeIsActive()) {
             drivetrain(); /*drivetrain functions*/
@@ -52,10 +52,26 @@ public class TeleOpProgram extends LinearOpMode {
             //claw();
             mover();
             linearslide();
+            intake();
         }
     }
+    double speed = 1;
     public void intake () {
-
+        if (gamepad2.dpad_up) speed = 0.6;
+        if (gamepad2.dpad_left) speed = 0.75;
+        if (gamepad2.dpad_down) speed = 1;
+        if (gamepad2.right_trigger != 0) {
+            intake1.setPower(-speed);
+            intake2.setPower(speed);
+        }
+        else if (gamepad2.left_trigger != 0) {
+            intake1.setPower(speed);
+            intake2.setPower(-speed);
+        }
+        else {
+            intake1.setPower(0);
+            intake2.setPower(0);
+        }
     }
     public void slowmode () {
         if (gamepad1.dpad_up) {
@@ -170,6 +186,7 @@ public class TeleOpProgram extends LinearOpMode {
         }
     }
     public void turnclaw () {
+        DcMotor turnclaw = hardwareMap.get(DcMotor.class,"turnclaw");
         //If gamepad 2 left stick pointing up
         if (gamepad2.right_stick_y < 0) {
             //Move linear slide up
