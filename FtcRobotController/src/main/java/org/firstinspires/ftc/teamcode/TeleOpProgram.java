@@ -96,7 +96,7 @@ public class TeleOpProgram extends LinearOpMode {
     public void slowmode () {
         if (gamepad1.dpad_up) {
             frontspeed = 0.25;
-            sidewaysspeed = 0.3;
+            sidewaysspeed = 0.5;
             turnspeed = 0.25;
             telemetry.addData("mode","slow");
 
