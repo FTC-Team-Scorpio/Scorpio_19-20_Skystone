@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -18,12 +19,12 @@ public class TeleOpProgram extends LinearOpMode {
     Motor intake1;
     Motor intake2;
     MotorBlock block;
-    Servo claw1;
-    Servo claw2;
+    Servo claw;
     Servo mover1;
     Servo mover2;
     Motor lifter1;
     Motor lifter2;
+    CRServo horizlinear;
     double frontspeed = 1;
     double turnspeed = 0.6;
     double sidewaysspeed = 1;
@@ -38,35 +39,54 @@ public class TeleOpProgram extends LinearOpMode {
         linear2 = new Motor(hardwareMap.get(DcMotor.class,"linear2"));
         intake1 = new Motor(hardwareMap.get(DcMotor.class,"intake1"));
         intake2 = new Motor(hardwareMap.get(DcMotor.class,"intake2"));
+        horizlinear = hardwareMap.get(CRServo.class,"horizlinear");
         block = new MotorBlock(left1,right1,left2,right2);
-        claw1 = hardwareMap.get(Servo.class,"claw1");
-        claw2 = hardwareMap.get(Servo.class,"claw2");
+        claw = hardwareMap.get(Servo.class,"claw");
         mover1 = hardwareMap.get(Servo.class,"mover1");
         mover2 = hardwareMap.get(Servo.class,"mover2");//While OpMode is running
+        telemetry.addData("bla",horizlinear.getPower());
         waitForStart();
         while (opModeIsActive()) {
             drivetrain(); /*drivetrain functions*/
             slowmode(); /*activate/deactivate slowmode*/
-            //lifter();
-            //turnclaw();
-            //claw();
-            mover();
-            linearslide();
-            intake();
+            claw(); //claw
+            horizontallinear(); //horizontal linear slide
+            mover(); //foundation mover
+            linearslide(); //verticle linear slide
+            intake(); //intake mechanism
         }
     }
-    double speed = 1;
+    public void horizontallinear () {
+        if (gamepad2.right_stick_y > 0) {
+            horizlinear.setPower(1);
+        }
+        else if (gamepad2.right_stick_y < 0) {
+            horizlinear.setPower(-1);
+        }
+        else {
+            horizlinear.setPower(0.01);
+        }
+    }
+    public void claw () {
+        if (gamepad2.left_trigger != 0) {
+            claw.setPosition(0);
+        }
+        else if (gamepad2.right_trigger != 0) {
+            claw.setPosition(1);
+        }
+    }
+    double intakespeed = 1;
     public void intake () {
-        if (gamepad2.dpad_up) speed = 0.6;
-        if (gamepad2.dpad_left) speed = 0.75;
-        if (gamepad2.dpad_down) speed = 1;
+        if (gamepad2.dpad_up) intakespeed = 0.6;
+        if (gamepad2.dpad_left) intakespeed = 0.75;
+        if (gamepad2.dpad_down) intakespeed = 1;
         if (gamepad2.right_trigger != 0) {
-            intake1.setPower(-speed);
-            intake2.setPower(speed);
+            intake1.setPower(-intakespeed);
+            intake2.setPower(intakespeed);
         }
         else if (gamepad2.left_trigger != 0) {
-            intake1.setPower(speed);
-            intake2.setPower(-speed);
+            intake1.setPower(intakespeed);
+            intake2.setPower(-intakespeed);
         }
         else {
             intake1.setPower(0);
@@ -143,25 +163,15 @@ public class TeleOpProgram extends LinearOpMode {
             block.right2.stop();
         }
     }
-    public void claw () {
-        if (gamepad2.left_trigger != 0) {
-            claw1.setPosition(1);
-            claw2.setPosition(1);
-        }
-        if (gamepad2.right_trigger != 0) {
-            claw1.setPosition(0);
-            claw2.setPosition(0);
-        }
-    }
     public void mover () {
         if (gamepad2.a) {
             mover1.setPosition(1);
-            mover2.setPosition(1);
+            mover2.setPosition(0);
 
         }
         if (gamepad2.y) {
             mover1.setPosition(0);
-            mover2.setPosition(0);
+            mover2.setPosition(1);
         }
     }
 
@@ -183,24 +193,6 @@ public class TeleOpProgram extends LinearOpMode {
             //Stop linear slide
             linear1.setPower(0);
             linear2.setPower(0);
-        }
-    }
-    public void turnclaw () {
-        DcMotor turnclaw = hardwareMap.get(DcMotor.class,"turnclaw");
-        //If gamepad 2 left stick pointing up
-        if (gamepad2.right_stick_y < 0) {
-            //Move linear slide up
-            turnclaw.setPower(-0.25);
-        }
-        //If gamepad 2 left stick pointing up
-        else if (gamepad2.right_stick_y > 0) {
-            //Move linear slide down
-            turnclaw.setPower(0.25);
-        }
-        //If gamepad 2 left stick in center
-        else {
-            //Stop linear slide
-            turnclaw.setPower(0);
         }
     }
 
