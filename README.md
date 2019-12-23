@@ -1,3 +1,6 @@
+This is our ftc code for the 2019-20 season (Skystone). To find our main code go to FtcRobotControler
+
+FTC code readme below:
 ## NOTICE
 
 This repository contains v5.0 of the FTC SDK.  No further versions will pushed to https://github.com/ftctechnh/ftc_app.
