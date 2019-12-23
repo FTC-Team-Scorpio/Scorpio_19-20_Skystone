@@ -80,11 +80,11 @@ public class TeleOpProgram extends LinearOpMode {
         if (gamepad2.dpad_up) intakespeed = 0.6;
         if (gamepad2.dpad_left) intakespeed = 0.75;
         if (gamepad2.dpad_down) intakespeed = 1;
-        if (gamepad2.right_trigger != 0) {
+        if (gamepad2.right_bumper) {
             intake1.setPower(-intakespeed);
             intake2.setPower(intakespeed);
         }
-        else if (gamepad2.left_trigger != 0) {
+        else if (gamepad2.left_bumper) {
             intake1.setPower(intakespeed);
             intake2.setPower(-intakespeed);
         }
