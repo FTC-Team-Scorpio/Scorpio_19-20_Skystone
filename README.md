@@ -1,4 +1,4 @@
-This is our ftc code for the 2019-20 season (Skystone). To find our main code go to FtcRobotControler
+This is our ftc code for the 2019-20 season (Skystone). To find our main code go to FtcRobotController/src/main/java/org/firstinspires/ftc/teamcode
 
 FTC code readme below:
 ## NOTICE
