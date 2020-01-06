@@ -17,7 +17,7 @@ public class MotorBlock {
     Motor right2;
     int leftmodifier = -1;
     int rightmodifier = 1;
-    double multiplier = 0.5;
+    double multiplier = 0.67;
     BNO055IMU imu;
     BNO055IMU.Parameters parameters;
     Orientation lastAngles = new Orientation();

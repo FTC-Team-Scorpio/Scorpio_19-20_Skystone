@@ -18,7 +18,7 @@ public class RIGHT_FOUNDATION extends LinearOpMode {
     Motor left2;
     Motor right2;
     MotorBlock block;
-    double frontspeed = 0.4;
+    double frontspeed = 0.6;
     double turnspeed = 0.5;
     BNO055IMU imu;
     BNO055IMU.Parameters parameters;
@@ -130,7 +130,7 @@ public class RIGHT_FOUNDATION extends LinearOpMode {
         block.leftsidewaysrotations(0.5,13.5,imu);
 
         block.tank(-turnspeed/4,-turnspeed*1);
-        sleep(1600);
+        sleep(2133);
 
         block.backwardrotations(frontspeed,20);
 

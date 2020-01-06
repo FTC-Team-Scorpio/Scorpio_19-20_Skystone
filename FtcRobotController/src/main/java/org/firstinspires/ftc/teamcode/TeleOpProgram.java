@@ -179,16 +179,25 @@ public class TeleOpProgram extends LinearOpMode {
         //If gamepad 2 left stick pointing up
         if (gamepad2.left_stick_y < 0) {
             //Move linear slide up
-            linear1.setPower(0.5);
-            linear2.setPower(-0.5);
+            linear1.setPower(1);
+            linear2.setPower(-1);
         }
         //If gamepad 2 left stick pointing up
         else if (gamepad2.left_stick_y > 0) {
             //Move linear slide down
-            linear1.setPower(-0.3);
-            linear2.setPower(0.3);
+            linear1.setPower(-0.6);
+            linear2.setPower(0.6);
         }
         //If gamepad 2 left stick in center
+        else if (gamepad2.left_stick_x < 0) {
+            //Move linear slide up
+            linear1.setPower(0.4);
+            linear2.setPower(-0.4);
+        }
+        else if (gamepad2.left_stick_x > 0) {
+            linear1.setPower(-0.2);
+            linear2.setPower(0.2);
+        }
         else {
             //Stop linear slide
             linear1.setPower(0);
