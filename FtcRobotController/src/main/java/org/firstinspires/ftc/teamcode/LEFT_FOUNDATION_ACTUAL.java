@@ -172,7 +172,7 @@ public class LEFT_FOUNDATION_ACTUAL extends LinearOpMode {
         block.backwardrotations(0.5,18);
         block.stop();
 
-        block.leftsidewaysrotations(0.5, 5);
+        block.leftsidewaysrotations(0.5, 5,imu);
 
         block.forwardrotations(1,36);
         block.stop();

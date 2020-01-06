@@ -161,7 +161,7 @@ public class RIGHT_BLOCK extends LinearOpMode {
 
         block.backwardrotations(0.75,20);
 
-        block.leftsidewaysrotations(0.75,20);
+        //block.leftsidewaysrotations(0.75,20);
     }
 }
 

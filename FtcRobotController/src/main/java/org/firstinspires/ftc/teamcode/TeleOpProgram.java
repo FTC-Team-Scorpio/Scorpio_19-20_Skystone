@@ -77,7 +77,7 @@ public class TeleOpProgram extends LinearOpMode {
     }
     double intakespeed = 1;
     public void intake () {
-        if (gamepad2.dpad_up) intakespeed = 0.6;
+        if (gamepad2.dpad_up) intakespeed = 0.5;
         if (gamepad2.dpad_left) intakespeed = 0.75;
         if (gamepad2.dpad_down) intakespeed = 1;
         if (gamepad2.right_bumper) {
