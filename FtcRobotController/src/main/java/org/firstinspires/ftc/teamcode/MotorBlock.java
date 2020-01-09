@@ -180,7 +180,6 @@ public class MotorBlock {
         left2.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         right1.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         right2.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        resetAngle();
         while (left1.motor.isBusy() && right1.motor.isBusy() && left2.motor.isBusy() && right2.motor.isBusy()) {
             /*if (getAngle() > 0) {
                 left1.setPower(-speed * leftmodifier * 0.9);
@@ -216,12 +215,16 @@ public class MotorBlock {
         left2.motor.setTargetPosition(leftticks);
         right1.motor.setTargetPosition(-rightticks);
         right2.motor.setTargetPosition(-rightticks);
-        this.leftsideways(speed);
+        //faster
+        left1.setPower(-speed * leftmodifier * 2);
+        left2.setPower(speed * leftmodifier);
+        right1.setPower(speed * rightmodifier * 2);
+        right2.setPower(-speed * rightmodifier);
+        //faster
         left1.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         left2.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         right1.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         right2.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        resetAngle();
         while (left1.motor.isBusy() && right1.motor.isBusy() && left2.motor.isBusy() && right2.motor.isBusy()) {
             /*if (getAngle() > 0) {
                 left1.setPower(-speed * leftmodifier * 0.9);
@@ -264,7 +267,12 @@ public class MotorBlock {
         left2.motor.setTargetPosition(leftticks);
         right1.motor.setTargetPosition(-rightticks);
         right2.motor.setTargetPosition(-rightticks);
-        this.rightsideways(speed);
+        //
+        left1.setPower(speed * leftmodifier * 2);
+        left2.setPower(-speed * leftmodifier);
+        right1.setPower(-speed * rightmodifier * 2);
+        right2.setPower(speed * rightmodifier);
+        //
         left1.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         left2.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         right1.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);

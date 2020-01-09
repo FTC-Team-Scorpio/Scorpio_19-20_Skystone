@@ -130,7 +130,7 @@ public class RIGHT_FOUNDATION extends LinearOpMode {
         block.leftsidewaysrotations(0.5,13.5,imu);
 
         block.tank(-turnspeed/4,-turnspeed*1);
-        sleep(2133);
+        sleep(1050);
 
         block.backwardrotations(frontspeed,20);
 
