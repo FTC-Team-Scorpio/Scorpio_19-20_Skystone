@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.Range;
 
 @TeleOp /*Tele Op*/
 public class TeleOpProgram extends LinearOpMode {
@@ -24,6 +25,7 @@ public class TeleOpProgram extends LinearOpMode {
     Servo mover2;
     Motor lifter1;
     Motor lifter2;
+    Servo deliverer;
     CRServo horizlinear;
     double frontspeed = 1;
     double turnspeed = 0.6;
@@ -39,6 +41,7 @@ public class TeleOpProgram extends LinearOpMode {
         linear2 = new Motor(hardwareMap.get(DcMotor.class,"linear2"));
         intake1 = new Motor(hardwareMap.get(DcMotor.class,"intake1"));
         intake2 = new Motor(hardwareMap.get(DcMotor.class,"intake2"));
+        deliverer = hardwareMap.get(Servo.class,"deliverer");
         horizlinear = hardwareMap.get(CRServo.class,"horizlinear");
         block = new MotorBlock(left1,right1,left2,right2);
         claw = hardwareMap.get(Servo.class,"claw");
@@ -54,6 +57,7 @@ public class TeleOpProgram extends LinearOpMode {
             mover(); //foundation mover
             linearslide(); //verticle linear slide
             intake(); //intake mechanism
+            delivery(); //delivery mechanism
         }
     }
     public void horizontallinear () {
@@ -73,6 +77,18 @@ public class TeleOpProgram extends LinearOpMode {
         }
         else if (gamepad2.right_trigger != 0) {
             claw.setPosition(1);
+        }
+    }
+    boolean wasright = false;
+    int deliverypos = -1;
+    public void delivery () {
+        if (gamepad2.dpad_right && !wasright) {
+            wasright = true;
+            deliverypos *= -1;
+            deliverer.setPosition(Range.scale(deliverypos,-1,1,0,1));
+        }
+        else {
+            wasright = false;
         }
     }
     double intakespeed = 1;
@@ -124,6 +140,14 @@ public class TeleOpProgram extends LinearOpMode {
         //Backward (if left stick backward)
         else if (gamepad1.left_stick_y > 0) {
             block.backward(frontspeed);
+        }
+        //#1 Curveturn
+        else if ((gamepad1.right_stick_x < 0 && gamepad1.left_trigger > 0) || (gamepad1.right_trigger > 0 && gamepad1.right_stick_x < 0) || gamepad1.x) {
+            block.tank(0,0.5);
+        }
+        //#2 Curveturn
+        else if ((gamepad2.right_stick_x > 0 && gamepad1.left_trigger > 0) || (gamepad1.right_trigger < 0 && gamepad1.right_stick_x > 0) || gamepad1.b) {
+            block.tank(0.5,0);
         }
         //Left (if right stick left)
         else if (gamepad1.right_stick_x < 0) {

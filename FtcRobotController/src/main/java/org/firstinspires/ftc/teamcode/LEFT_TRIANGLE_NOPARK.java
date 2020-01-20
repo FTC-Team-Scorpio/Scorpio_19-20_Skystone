@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @Autonomous
-public class LEFT_TRIANGLE extends LinearOpMode {
+public class LEFT_TRIANGLE_NOPARK extends LinearOpMode {
     Motor left1;
     Motor right1;
     Motor left2;
@@ -64,10 +64,6 @@ public class LEFT_TRIANGLE extends LinearOpMode {
         block.tank(0,-0.5);
 
         sleep(3000);
-
-        block.forwardrotations(1,20);
-
-        block.rightsidewaysrotations(1,5);
 
         block.stop();
     }

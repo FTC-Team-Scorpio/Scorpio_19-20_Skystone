@@ -24,85 +24,85 @@ public class RIGHT_FOUNDATION_ACTUAL extends LinearOpMode {
     double turnspeed = (0.25+0.6)/2;
     boolean isright = true;
     BNO055IMU imu;
-    BNO055IMU.Parameters parameters;
-    Orientation             lastAngles = new Orientation();
-    double                  globalAngle;
-    HardwareMap hardwareMap2;
-    Telemetry telemetry2;
-    public void imuinit () {
-        if (isright) imu = hardwareMap.get(BNO055IMU.class,"imu");
-        else imu = hardwareMap2.get(BNO055IMU.class,"imu");
-        parameters = new BNO055IMU.Parameters();
-        parameters.mode                = BNO055IMU.SensorMode.IMU;
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.loggingEnabled      = false;
-        imu.initialize(parameters);
+        BNO055IMU.Parameters parameters;
+        Orientation             lastAngles = new Orientation();
+        double                  globalAngle;
+        HardwareMap hardwareMap2;
+        Telemetry telemetry2;
+        public void imuinit () {
+            if (isright) imu = hardwareMap.get(BNO055IMU.class,"imu");
+            else imu = hardwareMap2.get(BNO055IMU.class,"imu");
+            parameters = new BNO055IMU.Parameters();
+            parameters.mode                = BNO055IMU.SensorMode.IMU;
+            parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+            parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+            parameters.loggingEnabled      = false;
+            imu.initialize(parameters);
 
-        if (isright) telemetry.addData("Gyro Mode", "calibrating...");
-        else telemetry2.addData("Gyro Mode", "calibrating...");
-        if (isright) telemetry.update();
-        else telemetry2.update();
+            if (isright) telemetry.addData("Gyro Mode", "calibrating...");
+            else telemetry2.addData("Gyro Mode", "calibrating...");
+            if (isright) telemetry.update();
+            else telemetry2.update();
 
-        while (!isStopRequested() && !imu.isGyroCalibrated()) {
-            sleep(50);
-            idle();
+            while (!isStopRequested() && !imu.isGyroCalibrated()) {
+                sleep(50);
+                idle();
+            }
+
+            if (isright) telemetry.addData("Gyro Mode", "ready");
+            else telemetry2.addData("Gyro Mode", "ready");
+            if (isright) telemetry.addData("imu calib status", imu.getCalibrationStatus().toString());
+            else telemetry2.addData("imu calib status", imu.getCalibrationStatus().toString());
+            if (isright) telemetry.update();
+            else telemetry2.update();
         }
+        private void resetAngle()
+        {
+            lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
-        if (isright) telemetry.addData("Gyro Mode", "ready");
-        else telemetry2.addData("Gyro Mode", "ready");
-        if (isright) telemetry.addData("imu calib status", imu.getCalibrationStatus().toString());
-        else telemetry2.addData("imu calib status", imu.getCalibrationStatus().toString());
-        if (isright) telemetry.update();
-        else telemetry2.update();
-    }
-    private void resetAngle()
-    {
-        lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-
-        globalAngle = 0;
-    }
-    private double getAngle()
-    {
-        // We experimentally determined the Z axis is the axis we want to use for heading angle.
-        // We have to process the angle because the imu works in euler angles so the Z axis is
-        // returned as 0 to +180 or 0 to -180 rolling back to -179 or +179 when rotation passes
-        // 180 degrees. We detect this transition and track the total cumulative angle of rotation.
-
-        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-
-        double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
-
-        if (deltaAngle < -180)
-            deltaAngle += 360;
-        else if (deltaAngle > 180)
-            deltaAngle -= 360;
-
-        globalAngle += deltaAngle;
-
-        lastAngles = angles;
-
-        return globalAngle;
-    }
-    public void runleft (HardwareMap a, Telemetry b) throws  InterruptedException {
-        isright = false;
-        hardwareMap2 = a;
-        telemetry2 = b;
-        runOpMode();
-    }
-    public void runOpMode() throws InterruptedException {
-        //Variable Definitions
-        Servo mover1;
-        Servo mover2;
-        if (isright) {
-            left1 = new Motor(hardwareMap.get(DcMotor.class, "left1"));
-            right1 = new Motor(hardwareMap.get(DcMotor.class, "right1"));
-            left2 = new Motor(hardwareMap.get(DcMotor.class, "left2"));
-            right2 = new Motor(hardwareMap.get(DcMotor.class, "right2"));
-            block = new MotorBlock(left1,right1,left2,right2);
-            mover1 = hardwareMap.get(Servo.class,"mover1");
-            mover2 = hardwareMap.get(Servo.class,"mover2");
+            globalAngle = 0;
         }
+        private double getAngle()
+        {
+            // We experimentally determined the Z axis is the axis we want to use for heading angle.
+            // We have to process the angle because the imu works in euler angles so the Z axis is
+            // returned as 0 to +180 or 0 to -180 rolling back to -179 or +179 when rotation passes
+            // 180 degrees. We detect this transition and track the total cumulative angle of rotation.
+
+            Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
+            double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
+
+            if (deltaAngle < -180)
+                deltaAngle += 360;
+            else if (deltaAngle > 180)
+                deltaAngle -= 360;
+
+            globalAngle += deltaAngle;
+
+            lastAngles = angles;
+
+            return globalAngle;
+        }
+        public void runleft (HardwareMap a, Telemetry b) throws  InterruptedException {
+            isright = false;
+            hardwareMap2 = a;
+            telemetry2 = b;
+            runOpMode();
+        }
+        public void runOpMode() throws InterruptedException {
+            //Variable Definitions
+            Servo mover1;
+            Servo mover2;
+            if (isright) {
+                left1 = new Motor(hardwareMap.get(DcMotor.class, "left1"));
+                right1 = new Motor(hardwareMap.get(DcMotor.class, "right1"));
+                left2 = new Motor(hardwareMap.get(DcMotor.class, "left2"));
+                right2 = new Motor(hardwareMap.get(DcMotor.class, "right2"));
+                block = new MotorBlock(left1,right1,left2,right2);
+                mover1 = hardwareMap.get(Servo.class,"mover1");
+                mover2 = hardwareMap.get(Servo.class,"mover2");
+            }
         else {
             left1 = new Motor(hardwareMap2.get(DcMotor.class, "left1"));
             right1 = new Motor(hardwareMap2.get(DcMotor.class, "right1"));

@@ -30,6 +30,8 @@ public class RIGHT_TRIANGLE extends LinearOpMode {
 
         waitForStart();
 
+        block.rightsidewaysrotations(0.25,12,false);
+
         block.backwardrotations(frontspeed, 34);
 
         block.stop();

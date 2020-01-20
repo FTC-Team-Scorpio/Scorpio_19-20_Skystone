@@ -247,6 +247,51 @@ public class MotorBlock {
         }
         this.stop();
     }
+    public void leftsidewaysrotations (double speed, double distance,boolean bool) {
+        double rotations = distance / 12.5663706144;
+        int ticks = (int) (rotations * 1120);
+        int leftticks = ticks * leftmodifier;
+        int rightticks = ticks * rightmodifier;
+        left1.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        left2.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        right1.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        right2.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        left1.motor.setTargetPosition(leftticks);
+        left2.motor.setTargetPosition(leftticks);
+        right1.motor.setTargetPosition(-rightticks);
+        right2.motor.setTargetPosition(-rightticks);
+        //faster
+        left1.setPower(-speed * leftmodifier);
+        left2.setPower(speed * leftmodifier);
+        right1.setPower(speed * rightmodifier);
+        right2.setPower(-speed * rightmodifier);
+        //faster
+        left1.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        left2.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        right1.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        right2.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        while (left1.motor.isBusy() && right1.motor.isBusy() && left2.motor.isBusy() && right2.motor.isBusy()) {
+            /*if (getAngle() > 0) {
+                left1.setPower(-speed * leftmodifier * 0.9);
+                left2.setPower(speed * leftmodifier);
+                right1.setPower(speed * rightmodifier);
+                right2.setPower(-speed * rightmodifier * 0.9);
+            }
+            else if (getAngle() < 0) {
+                left1.setPower(-speed * leftmodifier);
+                left2.setPower(speed * leftmodifier * 0.9);
+                right1.setPower(speed * rightmodifier * 0.9);
+                right2.setPower(-speed * rightmodifier);
+            }
+            else {
+                left1.setPower(-speed * leftmodifier);
+                left2.setPower(speed * leftmodifier);
+                right1.setPower(speed * rightmodifier);
+                right2.setPower(-speed * rightmodifier);
+            }*/
+        }
+        this.stop();
+    }
     // Mecanum wheels ONLY
     public void rightsideways (double speed) {
         left1.setPower(speed * leftmodifier);
@@ -271,6 +316,34 @@ public class MotorBlock {
         left1.setPower(speed * leftmodifier * 2);
         left2.setPower(-speed * leftmodifier);
         right1.setPower(-speed * rightmodifier * 2);
+        right2.setPower(speed * rightmodifier);
+        //
+        left1.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        left2.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        right1.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        right2.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        while (left1.motor.isBusy() && right1.motor.isBusy() && left2.motor.isBusy() && right2.motor.isBusy()) {
+            //wait
+        }
+        this.stop();
+    }
+    public void rightsidewaysrotations (double speed, double distance,boolean bool) {
+        double rotations = distance / 12.5663706144;
+        int ticks = (int) (rotations * 1120);
+        int leftticks = ticks * leftmodifier;
+        int rightticks = ticks * rightmodifier;
+        left1.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        left2.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        right1.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        right2.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        left1.motor.setTargetPosition(leftticks);
+        left2.motor.setTargetPosition(leftticks);
+        right1.motor.setTargetPosition(-rightticks);
+        right2.motor.setTargetPosition(-rightticks);
+        //
+        left1.setPower(speed * leftmodifier);
+        left2.setPower(-speed * leftmodifier);
+        right1.setPower(-speed * rightmodifier);
         right2.setPower(speed * rightmodifier);
         //
         left1.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
