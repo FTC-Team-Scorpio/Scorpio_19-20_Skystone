@@ -4,12 +4,11 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 @TeleOp /*Tele Op*/
-public class TeleOpProgram extends LinearOpMode {
+public class SafinsTeleOp extends LinearOpMode {
     //Variable Definitions
     Motor left1;
     Motor right1;
@@ -27,6 +26,7 @@ public class TeleOpProgram extends LinearOpMode {
     Motor lifter2;
     Servo deliverer;
     CRServo horizlinear;
+    CRServo coolservo2;
     double frontspeed = 1;
     double turnspeed = 0.6;
     double sidewaysspeed = 1;
@@ -43,6 +43,7 @@ public class TeleOpProgram extends LinearOpMode {
         intake2 = new Motor(hardwareMap.get(DcMotor.class,"intake2"));
         deliverer = hardwareMap.get(Servo.class,"deliverer");
         horizlinear = hardwareMap.get(CRServo.class,"horizlinear");
+        coolservo2 = hardwareMap.get(CRServo.class, "coolservo2");
         block = new MotorBlock(left1,right1,left2,right2);
         claw = hardwareMap.get(Servo.class,"claw");
         mover1 = hardwareMap.get(Servo.class,"mover1");
@@ -58,6 +59,7 @@ public class TeleOpProgram extends LinearOpMode {
             linearslide(); //verticle linear slide
             intake(); //intake mechanism
             delivery(); //delivery mechanism
+            rightintakelift();
         }
     }
     public void horizontallinear () {
@@ -93,7 +95,6 @@ public class TeleOpProgram extends LinearOpMode {
     }
     double intakespeed = 1;
     public void intake () {
-        if (gamepad2.dpad_up) intakespeed = 0.5;
         if (gamepad2.dpad_left) intakespeed = 0.75;
         if (gamepad2.dpad_down) intakespeed = 1;
         if (gamepad2.right_bumper) {
@@ -226,6 +227,12 @@ public class TeleOpProgram extends LinearOpMode {
             //Stop linear slide
             linear1.setPower(0);
             linear2.setPower(0);
+        }
+    }
+
+    public void rightintakelift () {
+        if (gamepad2.dpad_up) {
+            coolservo2.setPower(-1);
         }
     }
 
