@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -12,6 +13,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 @Autonomous
+@Disabled
 public class SKYSTONE_LEFT extends LinearOpMode {
     ColorSensor colorSensor;
     Motor left1;
@@ -86,18 +88,16 @@ public class SKYSTONE_LEFT extends LinearOpMode {
         block = new MotorBlock(left1, right1, left2, right2);
         int skystone = 0;
         int stone  = 0;
-        telemetry.addData("1","Show the skystone (press x when done):");
         while (!(gamepad1.x || gamepad2.x)) {
             telemetry.addData("1","Show the skystone (press x when done):");
-            telemetry.addData("2",colorSensor.argb());
+            telemetry.addData("2","color sensor shows" + colorSensor.argb());
             telemetry.update();
         }
         skystone = colorSensor.argb();
-        telemetry.addData("1","Show the normal stone (press x when done):");
         sleep(500);
         while (!(gamepad1.x || gamepad2.x)) {
-            telemetry.addData("1","Show the skystone (press x when done):");
-            telemetry.addData("2",colorSensor.argb());
+            telemetry.addData("1","Show the normal stone (press x when done):");
+            telemetry.addData("2","color sensor shows" + colorSensor.argb());
             telemetry.addData("3","skystone val is"+skystone);
             telemetry.update();
         }
@@ -106,23 +106,11 @@ public class SKYSTONE_LEFT extends LinearOpMode {
         telemetry.update();
         int median = (stone+skystone)/2;
 
-        imuinit();
+        //imuinit();
         waitForStart();
 
-        block.forwardrotations(1,15);
-
-        block.right(1);
-        while (opModeIsActive() && getAngle() == 0) {
-            telemetry.addData("angle",getAngle());
-            telemetry.update();
-        }
-
-        while (opModeIsActive() && getAngle() > -90) {
-            telemetry.addData("angle",getAngle());
-            telemetry.update();
-        }
-        telemetry.addData("done","done");
-        telemetry.update();
+        block.leftsideways((0.3+1)/2);
+        sleep(2900);
         block.forward(0.5);
         while (colorSensor.argb() > median) {
 

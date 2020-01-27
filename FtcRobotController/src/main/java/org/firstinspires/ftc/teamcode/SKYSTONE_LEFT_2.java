@@ -4,8 +4,8 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -14,14 +14,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 @Autonomous
 @Disabled
-public class LEFT_FOUNDATION extends LinearOpMode {
+public class SKYSTONE_LEFT_2 extends LinearOpMode {
+    ColorSensor colorSensor;
     Motor left1;
     Motor right1;
     Motor left2;
     Motor right2;
     MotorBlock block;
-    double frontspeed = 0.4;
-    double turnspeed = 0.5;
     BNO055IMU imu;
     BNO055IMU.Parameters parameters;
     Orientation lastAngles = new Orientation();
@@ -35,14 +34,22 @@ public class LEFT_FOUNDATION extends LinearOpMode {
         parameters.loggingEnabled      = false;
         imu.initialize(parameters);
 
+        telemetry.addData("Gyro Mode", "calibrating...");
+
+        telemetry.update();
+
+
         while (!isStopRequested() && !imu.isGyroCalibrated()) {
             sleep(50);
             idle();
         }
 
         telemetry.addData("Gyro Mode", "ready");
+
         telemetry.addData("imu calib status", imu.getCalibrationStatus().toString());
+
         telemetry.update();
+
     }
     private void resetAngle()
     {
@@ -72,71 +79,43 @@ public class LEFT_FOUNDATION extends LinearOpMode {
 
         return globalAngle;
     }
-    public void runOpMode() throws InterruptedException {
-        //Variable Definitions
+    public void runOpMode () throws InterruptedException {
+        colorSensor = hardwareMap.get(ColorSensor.class, "color");
         left1 = new Motor(hardwareMap.get(DcMotor.class, "left1"));
         right1 = new Motor(hardwareMap.get(DcMotor.class, "right1"));
         left2 = new Motor(hardwareMap.get(DcMotor.class, "left2"));
         right2 = new Motor(hardwareMap.get(DcMotor.class, "right2"));
-        block = new MotorBlock(left1,right1,left2,right2);
-        Servo mover1 = hardwareMap.get(Servo.class,"mover1");
-        Servo mover2 = hardwareMap.get(Servo.class,"mover2");
+        block = new MotorBlock(left1, right1, left2, right2);
+        int skystone = 0;
+        int stone  = 0;
+        while (!(gamepad1.x || gamepad2.x)) {
+            telemetry.addData("1","Show the skystone (press x when done):");
+            telemetry.addData("2","color sensor shows" + colorSensor.argb());
+            telemetry.update();
+        }
+        skystone = colorSensor.argb();
+        sleep(500);
+        while (!(gamepad1.x || gamepad2.x)) {
+            telemetry.addData("1","Show the normal stone (press x when done):");
+            telemetry.addData("2","color sensor shows" + colorSensor.argb());
+            telemetry.addData("3","skystone val is"+skystone);
+            telemetry.update();
+        }
+        stone = colorSensor.argb();
+        telemetry.addData("1","skystone is "+skystone,"stone is "+stone);
+        telemetry.update();
+        int median = (stone+skystone)/2;
 
-        imuinit();
-        resetAngle();
-
+        //imuinit();
         waitForStart();
 
-        block.backwardrotations(frontspeed,34);
+        block.leftsideways((0.3+1)/2);
+        sleep(2900);
+        block.forward(0.5);
+        while (colorSensor.argb() > median) {
 
-        block.stop();
-
-        mover1.setPosition(1);
-        mover2.setPosition(0);
-
-        sleep(300);
-
-        /*block.frontbla(frontspeed);
-        sleep(1500);*/
-
-        block.forwardrotations(frontspeed,33.5);
-
-        /*block.right(turnspeed);
-        sleep(500);*/
-
-        block.stop();
-
-        sleep(1000);
-
-        mover1.setPosition(0);
-        mover2.setPosition(1);
-
-        resetAngle();
-        block.left1.motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        block.right1.motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        block.right2.motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        block.left2.motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        block.right(turnspeed);
-        while (opModeIsActive() && getAngle() == 0) {
-            telemetry.addData("angle",getAngle());
-            telemetry.update();
         }
-
-        while (opModeIsActive() && getAngle() > -90) {
-            telemetry.addData("angle",getAngle());
-            telemetry.update();
-        }
-
-        block.forwardrotations(frontspeed,25);
-
-        block.rightsidewaysrotations(0.5,13.5);
-
-        block.tank(-turnspeed*1,-turnspeed/4);
-        sleep(1050);
-
-        block.backwardrotations(frontspeed,20);
-
-        block.forwardrotations(frontspeed,31);
+        sleep(100);
+        block.stop();
     }
 }
-
