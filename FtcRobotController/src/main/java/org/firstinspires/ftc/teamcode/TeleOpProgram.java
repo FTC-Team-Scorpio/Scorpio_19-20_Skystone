@@ -27,6 +27,8 @@ public class TeleOpProgram extends LinearOpMode {
     Motor lifter2;
     Servo deliverer;
     CRServo horizlinear;
+    CRServo foldservo1;
+    CRServo foldservo2;
     double frontspeed = 1;
     double turnspeed = 0.6;
     double sidewaysspeed = 1;
@@ -228,5 +230,7 @@ public class TeleOpProgram extends LinearOpMode {
             linear2.setPower(0);
         }
     }
+    public void fold () {
 
+    }
 }
