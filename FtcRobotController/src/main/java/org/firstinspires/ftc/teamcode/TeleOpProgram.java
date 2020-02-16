@@ -45,6 +45,8 @@ public class TeleOpProgram extends LinearOpMode {
         intake2 = new Motor(hardwareMap.get(DcMotor.class,"intake2"));
         deliverer = hardwareMap.get(Servo.class,"deliverer");
         horizlinear = hardwareMap.get(CRServo.class,"horizlinear");
+        foldservo1 = hardwareMap.get(CRServo.class,"foldservo1");
+        foldservo2 = hardwareMap.get(CRServo.class,"foldservo2");
         block = new MotorBlock(left1,right1,left2,right2);
         claw = hardwareMap.get(Servo.class,"claw");
         mover1 = hardwareMap.get(Servo.class,"mover1");
@@ -60,6 +62,7 @@ public class TeleOpProgram extends LinearOpMode {
             linearslide(); //verticle linear slide
             intake(); //intake mechanism
             delivery(); //delivery mechanism
+            fold(); //fold mechanism
         }
     }
     public void horizontallinear () {
@@ -231,6 +234,17 @@ public class TeleOpProgram extends LinearOpMode {
         }
     }
     public void fold () {
-
+        if (gamepad2.dpad_up) {
+            foldservo1.setPower(1);
+            foldservo2.setPower(-1);
+        }
+        else if (gamepad2.dpad_down) {
+            foldservo1.setPower(-1);
+            foldservo2.setPower(1);
+        }
+        else {
+            foldservo1.setPower(0);
+            foldservo2.setPower(0);
+        }
     }
 }

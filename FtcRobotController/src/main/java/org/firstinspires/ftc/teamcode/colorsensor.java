@@ -8,14 +8,23 @@ import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
 @Autonomous
-@Disabled
 public class colorsensor extends LinearOpMode {
     public void runOpMode () {
         ColorSensor colorSensor = hardwareMap.get(ColorSensor.class, "color");
         waitForStart();
         while (opModeIsActive()) {
-            int a = colorSensor.argb();
-            telemetry.addData("value", a);
+            int alpha = colorSensor.alpha();
+            int blue = colorSensor.blue();
+            int green = colorSensor.green();
+            int red = colorSensor.red();
+            int rgba = colorSensor.argb();
+            telemetry.addData("alpha",alpha);
+            telemetry.addData("red",red);
+            telemetry.addData("blue",blue);
+            telemetry.addData("green",green);
+            telemetry.addData("rgba",rgba);
+            if (rgba < 70000000) telemetry.addData("Skystone","Skystone");
+            else telemetry.addData("No Skystone","No Skystone");
             telemetry.update();
         }
     }

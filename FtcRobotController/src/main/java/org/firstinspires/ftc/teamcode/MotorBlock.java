@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -58,12 +59,18 @@ public class MotorBlock {
         this.left2 = left2;
         this.right2 = right2;
     }
+    //Go forward
     public void forward (double speed) {
+        left1.motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        left2.motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        right1.motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        right2.motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         left1.setPower(speed * leftmodifier);
         left2.setPower(speed * leftmodifier);
         right1.setPower(speed * rightmodifier);
         right2.setPower(speed * rightmodifier);
     }
+    //Go forward w/ rotations
     public void forwardrotations (double speed, double distance) {
         double rotations = distance / 12.5663706144;
         int ticks = (int) ((rotations * 1120) * multiplier);
@@ -109,6 +116,31 @@ public class MotorBlock {
         right1.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         right2.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         while (left1.motor.isBusy() && right1.motor.isBusy() && left2.motor.isBusy() && right2.motor.isBusy()) {
+            //wait
+        }
+        this.stop();
+    }
+    public void backwardrotationstimer (double speed, double distance) {
+        double rotations = distance / 12.5663706144;
+        int ticks = (int) ((rotations * 1120) * multiplier);
+        int leftticks = ticks * leftmodifier * -1;
+        int rightticks = ticks * rightmodifier * -1;
+        left1.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        left2.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        right1.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        right2.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        left1.motor.setTargetPosition(-leftticks);
+        left2.motor.setTargetPosition(-leftticks);
+        right1.motor.setTargetPosition(rightticks);
+        right2.motor.setTargetPosition(rightticks);
+        this.backward(speed/1.5);
+        left1.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        left2.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        right1.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        right2.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        ElapsedTime timer = new ElapsedTime();
+        timer.reset();
+        while (left1.motor.isBusy() && right1.motor.isBusy() && left2.motor.isBusy() && right2.motor.isBusy() && timer.seconds() < 4) {
             //wait
         }
         this.stop();
@@ -316,6 +348,34 @@ public class MotorBlock {
         left1.setPower(speed * leftmodifier * 2);
         left2.setPower(-speed * leftmodifier);
         right1.setPower(-speed * rightmodifier * 2);
+        right2.setPower(speed * rightmodifier);
+        //
+        left1.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        left2.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        right1.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        right2.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        while (left1.motor.isBusy() && right1.motor.isBusy() && left2.motor.isBusy() && right2.motor.isBusy()) {
+            //wait
+        }
+        this.stop();
+    }
+    public void rightsidewaysrotationss (double speed, double distance) {
+        double rotations = distance / 12.5663706144;
+        int ticks = (int) (rotations * 1120);
+        int leftticks = ticks * leftmodifier;
+        int rightticks = ticks * rightmodifier;
+        left1.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        left2.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        right1.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        right2.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        left1.motor.setTargetPosition(leftticks);
+        left2.motor.setTargetPosition(leftticks);
+        right1.motor.setTargetPosition(-rightticks);
+        right2.motor.setTargetPosition(-rightticks);
+        //
+        left1.setPower(speed * leftmodifier);
+        left2.setPower(-speed * leftmodifier);
+        right1.setPower(-speed * rightmodifier);
         right2.setPower(speed * rightmodifier);
         //
         left1.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
